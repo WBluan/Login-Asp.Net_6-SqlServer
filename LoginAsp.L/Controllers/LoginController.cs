@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
+using System.Data.SqlClient;
 using System.Security.Claims;
 
 namespace LoginAspNet.Controllers
@@ -17,15 +18,15 @@ namespace LoginAspNet.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Logar(string username, string senha)
+        public async Task<IActionResult> Logar(string username, string password)
         {
-            MySqlConnection mySqlConnection = new MySqlConnection("server=localhost;database=usuariosdb;uid=root;password=Monique15082002luan");
-            await mySqlConnection.OpenAsync();
+            SqlConnection SqlConnection = new SqlConnection(@"Data Source=DESKTOP-NO90F78\SQLEXPRESS;Initial Catalog=usuariosdb;Integrated Security=True");
+            await SqlConnection.OpenAsync();
 
-            MySqlCommand mySqlCommand = mySqlConnection.CreateCommand();
-            mySqlCommand.CommandText = $"SELECT * FROM usuarios WHERE username = '{username}' AND senha = '{senha}'";
+            SqlCommand SqlCommand = SqlConnection.CreateCommand();
+            SqlCommand.CommandText = $"SELECT * FROM Usuario WHERE username = '{username}' AND password = '{password}'";
 
-            MySqlDataReader reader = mySqlCommand.ExecuteReader();
+            SqlDataReader reader = SqlCommand.ExecuteReader();
 
             if(await reader.ReadAsync())
                 {
